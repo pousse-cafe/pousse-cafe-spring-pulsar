@@ -1,5 +1,6 @@
 package poussecafe.spring.pulsar;
 
+import java.time.Duration;
 import java.util.List;
 import org.apache.pulsar.client.api.SubscriptionType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +24,15 @@ public class SpringPulsarConfig {
             @Value("${poussecafe.spring.pulsar.subscriptionName:pousse-cafe}") String subscriptionName,
             @Value("${poussecafe.spring.pulsar.defaultPublicationTopic:pousse-cafe}") String defaultPublicationTopic,
             @Value("${poussecafe.spring.pulsar.subscriptionType:Shared}") String subscriptionType,
+            @Value("${poussecafe.spring.pulsar.statsIntervalInS:-1}") String statsIntervalInS,
             @Autowired(required = false) PublicationTopicChooser publicationTopicChooser) {
         PulsarMessagingConfiguration.Builder configurationBuilder = new PulsarMessagingConfiguration.Builder()
                 .brokerUrl(brokerUrl)
                 .subscriptionTopics(parseSubscriptionTopics(subscriptionTopics))
                 .subscriptionName(subscriptionName)
                 .defaultPublicationTopic(defaultPublicationTopic)
-                .subscriptionType(SubscriptionType.valueOf(subscriptionType));
+                .subscriptionType(SubscriptionType.valueOf(subscriptionType))
+                .statsInterval(Duration.ofSeconds(Long.valueOf(statsIntervalInS)));
         if(publicationTopicChooser != null) {
             configurationBuilder.publicationTopicChooser(publicationTopicChooser);
         }

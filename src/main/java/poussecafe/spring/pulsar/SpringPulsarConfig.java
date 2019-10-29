@@ -25,6 +25,7 @@ public class SpringPulsarConfig {
             @Value("${poussecafe.spring.pulsar.defaultPublicationTopic:pousse-cafe}") String defaultPublicationTopic,
             @Value("${poussecafe.spring.pulsar.subscriptionType:Shared}") String subscriptionType,
             @Value("${poussecafe.spring.pulsar.statsIntervalInS:-1}") String statsIntervalInS,
+            @Value("${poussecafe.spring.pulsar.sendAsynchronously:false}") String sendAsynchronously,
             @Autowired(required = false) PublicationTopicChooser publicationTopicChooser) {
         PulsarMessagingConfiguration.Builder configurationBuilder = new PulsarMessagingConfiguration.Builder()
                 .brokerUrl(brokerUrl)
@@ -32,7 +33,8 @@ public class SpringPulsarConfig {
                 .subscriptionName(subscriptionName)
                 .defaultPublicationTopic(defaultPublicationTopic)
                 .subscriptionType(SubscriptionType.valueOf(subscriptionType))
-                .statsInterval(Duration.ofSeconds(Long.valueOf(statsIntervalInS)));
+                .statsInterval(Duration.ofSeconds(Long.valueOf(statsIntervalInS)))
+                .sendAsynchronously(Boolean.valueOf(sendAsynchronously));
         if(publicationTopicChooser != null) {
             configurationBuilder.publicationTopicChooser(publicationTopicChooser);
         }
